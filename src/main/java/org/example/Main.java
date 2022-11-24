@@ -177,7 +177,7 @@ public class Main {
 
     public static void shoot(Terminal terminal, int x, int y, Character direction) throws IOException, InterruptedException {
         TerminalSize t = terminal.getTerminalSize();
-        
+
         for (int i = 2; i < t.getColumns(); i++) {
             switch (direction) {
                 case 'w' -> {
