@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.googlecode.lanterna.Symbols.*;
+
 public class Main {
     final static char block = '\u2588';
+
     public static void main(String[] args) throws Exception {
 
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
@@ -23,9 +26,11 @@ public class Main {
         int row = 10;
         int oldPositionC = column;
         int oldPositionR = row;
-        final char player = 'X';
+        final char player = FACE_WHITE;
         char monsterPlayer = '\uDC7D';
         String boom = "Game over";
+
+        Character direction = 'd';
 
         ArrayList<Position> walls = CreateWalls(terminal);
         Position monsterPosition = CreateMonster(terminal);
@@ -50,114 +55,170 @@ public class Main {
             terminal.putCharacter(player);
         }
 
-            while (continueReadingInput == true) {
+        while (continueReadingInput == true) {
 
-                KeyStroke keyStroke = null;
-                do {
-                    Thread.sleep(5);
-                    keyStroke = terminal.pollInput();
-                } while (keyStroke == null);
+            KeyStroke keyStroke = null;
+            do {
+                Thread.sleep(5);
+                keyStroke = terminal.pollInput();
+            } while (keyStroke == null);
 
-                KeyType type = keyStroke.getKeyType();
-                Character c = keyStroke.getCharacter();
+            KeyType type = keyStroke.getKeyType();
+            Character c = keyStroke.getCharacter();
 
-                if (c == Character.valueOf('q')) {
-                    continueReadingInput = false;
-                    System.out.println("quit");
-                    terminal.close();
-                }
-
-                terminal.setCursorPosition(column, row);
-                terminal.putCharacter(' ');
-
-                switch (c) {
-                    case 'w':
-                        oldPositionR = row;
-                        row -= 1;
-                        break;
-                    case 'a':
-                        oldPositionC = column;
-                        column -= 1;
-                        break;
-                    case 's':
-                        oldPositionR = row;
-                        row += 1;
-                        break;
-                    case 'd':
-                        oldPositionC = column;
-                        column += 1;
-                        break;
-                }
-
-                for (Position p : walls) {
-                    if (column == p.column && row == p.row) {
-                        column = oldPositionC;
-                        row = oldPositionR;
-                        break;
-                    }
-
-                }
-
-                terminal.setCursorPosition(column, row);
-                terminal.putCharacter(player);
-                terminal.setCursorVisible(false);
-                terminal.flush();
-
-                if (column == monsterPosition.column && row == monsterPosition.row) {
-                    for (int i = 0; i < boom.length(); i++) {
-                        terminal.setCursorPosition(monsterPosition.column + i, monsterPosition.row);
-                        terminal.putCharacter(boom.charAt(i));
-                        terminal.flush();
-
-                    }
-                }
-
+            if (c == Character.valueOf('q')) {
+                continueReadingInput = false;
+                System.out.println("quit");
+                terminal.close();
             }
 
-        }
-        private static ArrayList<Position> CreateWalls(Terminal terminal) throws IOException {
-            ArrayList<Position> walls = new ArrayList<Position>();
-            walls.add(new Position(4, 15));
-            walls.add(new Position(5, 15));
-            walls.add(new Position(6, 15));
-            walls.add(new Position(7, 15));
-            walls.add(new Position(8, 15));
-            walls.add(new Position(9, 15));
-            walls.add(new Position(10, 15));
-            walls.add(new Position(11, 15));
-            walls.add(new Position(12, 15));
-            walls.add(new Position(13, 15));
-            walls.add(new Position(14, 15));
-            walls.add(new Position(15, 15));
-            walls.add(new Position(1, 10));
-            walls.add(new Position(2, 10));
-            walls.add(new Position(3, 10));
-            walls.add(new Position(4, 10));
-            walls.add(new Position(5, 10));
-            walls.add(new Position(6, 10));
-            walls.add(new Position(7, 10));
+            terminal.setCursorPosition(column, row);
+            terminal.putCharacter(' ');
 
-            DrawWall(terminal, walls);
+            switch (c) {
+                case 'w':
+                    oldPositionR = row;
+                    row -= 1;
+                    direction = 'w';
+                    break;
+                case 'a':
+                    oldPositionC = column;
+                    column -= 1;
+                    direction = 'a';
+                    break;
+                case 's':
+                    oldPositionR = row;
+                    row += 1;
+                    direction = 's';
+                    break;
+                case 'd':
+                    oldPositionC = column;
+                    column += 1;
+                    direction = 'd';
+                    break;
+            }
 
-            return walls;
-        }
-        private static void DrawWall(Terminal terminal, ArrayList<Position>  walls) throws IOException {
             for (Position p : walls) {
-                terminal.setCursorPosition(p.column, p.row);
-                terminal.putCharacter(block);
-            }
-        }
+                if (column == p.column && row == p.row) {
+                    column = oldPositionC;
+                    row = oldPositionR;
+                    break;
+                }
 
-        private static Position CreateMonster(Terminal terminal) throws IOException {
-            Random addMonster = new Random();
-            Position monsterPosition = new Position(addMonster.nextInt(80), addMonster.nextInt(24));
-            terminal.setCursorPosition(monsterPosition.column, monsterPosition.row);
-            terminal.putCharacter('\uDC7D');
+            }
+
+            terminal.setCursorPosition(column, row);
+            terminal.putCharacter(player);
+            terminal.setCursorVisible(false);
             terminal.flush();
 
-            return monsterPosition;
+            if (column == monsterPosition.column && row == monsterPosition.row) {
+                for (int i = 0; i < boom.length(); i++) {
+                    terminal.setCursorPosition(monsterPosition.column + i, monsterPosition.row);
+                    terminal.putCharacter(boom.charAt(i));
+                    terminal.flush();
+
+                }
+            }
+
+            // Shoot method call
+            if (c == Character.valueOf('k')){
+                shoot(terminal, column, row, direction);
+            }
+
+
+        }
+
+    }
+
+    private static ArrayList<Position> CreateWalls(Terminal terminal) throws IOException {
+        ArrayList<Position> walls = new ArrayList<Position>();
+        walls.add(new Position(4, 15));
+        walls.add(new Position(5, 15));
+        walls.add(new Position(6, 15));
+        walls.add(new Position(7, 15));
+        walls.add(new Position(8, 15));
+        walls.add(new Position(9, 15));
+        walls.add(new Position(10, 15));
+        walls.add(new Position(11, 15));
+        walls.add(new Position(12, 15));
+        walls.add(new Position(13, 15));
+        walls.add(new Position(14, 15));
+        walls.add(new Position(15, 15));
+        walls.add(new Position(1, 10));
+        walls.add(new Position(2, 10));
+        walls.add(new Position(3, 10));
+        walls.add(new Position(4, 10));
+        walls.add(new Position(5, 10));
+        walls.add(new Position(6, 10));
+        walls.add(new Position(7, 10));
+
+        DrawWall(terminal, walls);
+
+        return walls;
+    }
+
+    private static void DrawWall(Terminal terminal, ArrayList<Position> walls) throws IOException {
+        for (Position p : walls) {
+            terminal.setCursorPosition(p.column, p.row);
+            terminal.putCharacter(block);
         }
     }
+
+    private static Position CreateMonster(Terminal terminal) throws IOException {
+        Random addMonster = new Random();
+        Position monsterPosition = new Position(addMonster.nextInt(80), addMonster.nextInt(24));
+        terminal.setCursorPosition(monsterPosition.column, monsterPosition.row);
+        terminal.putCharacter('\uDC7D');
+        terminal.flush();
+
+        return monsterPosition;
+    }
+
+    public static void shoot(Terminal terminal, int x, int y, Character direction) throws IOException, InterruptedException {
+        TerminalSize t = terminal.getTerminalSize();
+        
+        for (int i = 2; i < t.getColumns(); i++) {
+            switch (direction) {
+                case 'w' -> {
+                    terminal.setCursorPosition(x, y - i);
+                    terminal.putCharacter(TRIANGLE_UP_POINTING_BLACK);
+                    terminal.flush();
+                    terminal.setCursorPosition(x, y - i + 1);
+                    terminal.putCharacter(' ');
+                    terminal.flush();
+                }
+                case 's' -> {
+                    terminal.setCursorPosition(x, y + i);
+                    terminal.putCharacter(TRIANGLE_DOWN_POINTING_BLACK);
+                    terminal.flush();
+                    terminal.setCursorPosition(x, y + i - 1);
+                    terminal.putCharacter(' ');
+                    terminal.flush();
+                }
+                case 'a' -> {
+                    terminal.setCursorPosition(x - i, y);
+                    terminal.putCharacter(TRIANGLE_LEFT_POINTING_BLACK);
+                    terminal.flush();
+                    terminal.setCursorPosition(x - i + 1, y);
+                    terminal.putCharacter(' ');
+                    terminal.flush();
+                }
+                case 'd' -> {
+                    terminal.setCursorPosition(x + i, y);
+                    terminal.putCharacter(TRIANGLE_RIGHT_POINTING_BLACK);
+                    terminal.flush();
+                    terminal.setCursorPosition(x + i - 1, y);
+                    terminal.putCharacter(' ');
+                    terminal.flush();
+                }
+            }
+            Thread.sleep(3);
+        }
+    }
+
+
+}
 
 //Position bombPosition = CreateBomb(terminal);
 /*// om bombposition är på samma column och row som x, så kommer massa B skrivas ut på skärmen, game over.
