@@ -8,10 +8,12 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Main {
     final static char block = '\u2588';
+
     public static void main(String[] args) throws Exception {
 
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
@@ -29,6 +31,9 @@ public class Main {
 
         ArrayList<Position> walls = CreateWalls(terminal);
         Position monsterPosition = CreateMonster(terminal);
+
+        Score score =new Score();
+        createScore(terminal, score);
 
         terminal.setCursorPosition(column, row);
         terminal.putCharacter(player);
@@ -103,13 +108,21 @@ public class Main {
                 terminal.setCursorVisible(false);
                 terminal.flush();
 
-                if (column == monsterPosition.column && row == monsterPosition.row) {
-                    for (int i = 0; i < boom.length(); i++) {
+                if (column == monsterPosition.column && row == monsterPosition.row) { //CH Bullet
+                    addScore(terminal, score);//BulletPosstion Christoffers kod
+                    //Ta bort monster i Array. I samma ställe där du gör addScore
+//              for (int i  = 0; i < monsterArray.size(); i++){
+//                   if(bulletPosition.column == m.column && bulletPosition.row == m.row){
+//                     monsterArray.remove(i);
+//                     break;
+//                   }
+
+                    /*for (int i = 0; i < boom.length(); i++) {
                         terminal.setCursorPosition(monsterPosition.column + i, monsterPosition.row);
                         terminal.putCharacter(boom.charAt(i));
                         terminal.flush();
 
-                    }
+                    }*/
                 }
 
             }
@@ -136,7 +149,6 @@ public class Main {
             walls.add(new Position(5, 10));
             walls.add(new Position(6, 10));
             walls.add(new Position(7, 10));
-
             DrawWall(terminal, walls);
 
             return walls;
@@ -157,7 +169,38 @@ public class Main {
 
             return monsterPosition;
         }
-    }
+        static public void createScore(Terminal terminal, Score score) throws IOException {
+            String text = score.getScoreText();
+            for(var i = 0; i < text.length(); i++){
+                terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
+                terminal.putCharacter(text.charAt(i));
+            }
+            terminal.flush();
+        }
+    static public void addScore(Terminal terminal, Score score) throws IOException {
+             score.increseScore();
+
+             String text = score.getScoreText();
+             for(var i = 0; i < text.length(); i++){
+                 terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
+                 terminal.putCharacter(text.charAt(i));
+             }
+             terminal.flush();
+
+            }
+
+        }
+
+
+
+//Ta bort monster i Array. I samma ställe där du gör addScore
+// for (int i  = 0; i < monsterArray.size(); i++){
+//      if(bulletPosition.column == m.column && bulletPosition.row == m.row){
+//          monsterArray.remove(i);
+//          break;
+//      }
+// }
+
 
 //Position bombPosition = CreateBomb(terminal);
 /*// om bombposition är på samma column och row som x, så kommer massa B skrivas ut på skärmen, game over.
