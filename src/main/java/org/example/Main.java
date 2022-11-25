@@ -40,7 +40,6 @@ public class Main {
 
         ArrayList<Position> walls = new ArrayList<>();
 
-//        walls = CreateWalls(terminal);
         ArrayList<Position> walls2 = Walls.CreateWalls1(terminal);
         Position monsterPosition = CreateMonster(terminal);
 
