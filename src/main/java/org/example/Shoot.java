@@ -5,6 +5,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static com.googlecode.lanterna.Symbols.*;
 
@@ -71,7 +72,16 @@ public class Shoot {
                 Thread.sleep(1000);
             }
         }
+
+        for (Position p : walls) {
+            if (bulletCol == p.column && bulletRow == p.row) {
+                terminal.setCursorPosition(p.column, p.row);
+                terminal.putCharacter('\u2620');
+                terminal.flush();
+                Thread.sleep(1000);
+            }
+        }
+
+
     }
-
-
 }
