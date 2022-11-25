@@ -8,6 +8,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static com.googlecode.lanterna.Symbols.*;
@@ -34,6 +35,9 @@ public class Main {
 
         ArrayList<Position> walls = CreateWalls(terminal);
         Position monsterPosition = CreateMonster(terminal);
+
+        Score score =new Score();
+        createScore(terminal, score);
 
         terminal.setCursorPosition(column, row);
         terminal.putCharacter(player);
@@ -112,11 +116,17 @@ public class Main {
             terminal.setCursorVisible(false);
             terminal.flush();
 
+
             if (column == monsterPosition.column && row == monsterPosition.row) {
+                
+
+
+        }
                 for (int i = 0; i < boom.length(); i++) {
                     terminal.setCursorPosition(monsterPosition.column + i, monsterPosition.row);
                     terminal.putCharacter(boom.charAt(i));
                     terminal.flush();
+
 
                 }
             }
@@ -125,9 +135,6 @@ public class Main {
             if (c == Character.valueOf('k')){
                 shoot(terminal, column, row, direction);
             }
-
-
-        }
 
     }
 
@@ -162,7 +169,14 @@ public class Main {
         for (Position p : walls) {
             terminal.setCursorPosition(p.column, p.row);
             terminal.putCharacter(block);
+     
+            walls.add(new Position(6, 10));
+            walls.add(new Position(7, 10));
+            DrawWall(terminal, walls);
+
+            return walls;
         }
+      
     }
 
     private static Position CreateMonster(Terminal terminal) throws IOException {
@@ -215,7 +229,38 @@ public class Main {
             }
             Thread.sleep(3);
         }
-    }
+        static public void createScore(Terminal terminal, Score score) throws IOException {
+            String text = score.getScoreText();
+            for(var i = 0; i < text.length(); i++){
+                terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
+                terminal.putCharacter(text.charAt(i));
+            }
+            terminal.flush();
+        }
+    static public void addScore(Terminal terminal, Score score) throws IOException {
+             score.increseScore();
+
+             String text = score.getScoreText();
+             for(var i = 0; i < text.length(); i++){
+                 terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
+                 terminal.putCharacter(text.charAt(i));
+             }
+             terminal.flush();
+
+            }
+
+        }
+
+
+
+//Ta bort monster i Array. I samma ställe där du gör addScore
+// for (int i  = 0; i < monsterArray.size(); i++){
+//      if(bulletPosition.column == m.column && bulletPosition.row == m.row){
+//          monsterArray.remove(i);
+//          break;
+//      }
+// }
+
 
 
 }
