@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import static com.googlecode.lanterna.Symbols.*;
-import static org.example.Main.addScore;
+import static org.example.Score.addScore;
 
 public class Shoot {
     public static void shoot(Terminal terminal, int column, int row, Character direction, ArrayList<Position> walls, Score score) throws IOException, InterruptedException {
