@@ -94,25 +94,23 @@ public class Main {
 
             terminal.setCursorPosition(column, row);
             terminal.putCharacter(' ');
+            oldPositionR = row;
+            oldPositionC = column;
 
             switch (c) {
                 case 'w':
-                    oldPositionR = row;
                     row -= 1;
                     direction = 'w';
                     break;
                 case 'a':
-                    oldPositionC = column;
                     column -= 1;
                     direction = 'a';
                     break;
                 case 's':
-                    oldPositionR = row;
                     row += 1;
                     direction = 's';
                     break;
                 case 'd':
-                    oldPositionC = column;
                     column += 1;
                     direction = 'd';
                     break;
@@ -142,14 +140,6 @@ public class Main {
             }
 
 
-
-//            count++;
-//
-//            if (count > 5) {
-//                walls.add(CreateMonster(terminal));
-//                count = 0;
-//            }
-
             // Shoot method call
             if (c == Character.valueOf('k')){
                 shoot(terminal, column, row, direction, walls2, score);
@@ -158,7 +148,6 @@ public class Main {
 
 
         }
-
     }
 
     static public void createScore(Terminal terminal, Score score) throws IOException {
@@ -196,13 +185,6 @@ public class Main {
 //
 //        return walls;
 //    }
-
-    private static void DrawWall(Terminal terminal, ArrayList<Position> walls) throws IOException {
-        for (Position p : walls) {
-            terminal.setCursorPosition(p.column, p.row);
-            terminal.putCharacter(block);
-        }
-    }
 
     public static Position CreateMonster(Terminal terminal) throws IOException {
         Random addMonster = new Random();

@@ -65,14 +65,6 @@ public class Shoot {
     }
 
     public static void monsterCheck(int bulletRow, int bulletCol, ArrayList<Position> walls, Terminal terminal, Score score) throws IOException, InterruptedException {
-        for (Position p : walls) {
-            if (bulletCol == p.column && bulletRow == p.row) {
-                terminal.setCursorPosition(p.column, p.row);
-                terminal.putCharacter('\u2620');
-                terminal.flush();
-                Thread.sleep(1000);
-            }
-        }
 
         for (Position p : walls) {
             if (bulletCol == p.column && bulletRow == p.row) {
@@ -80,10 +72,10 @@ public class Shoot {
                 terminal.setCursorPosition(p.column, p.row);
                 terminal.putCharacter('\u2620');
                 terminal.flush();
-                Thread.sleep(1000);
+                walls.remove(p);
+                break;
             }
         }
-
 
     }
 }
