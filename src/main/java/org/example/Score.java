@@ -11,7 +11,6 @@ public class Score {
 
     public Score(int score) {
         this.score = score;
-
     }
 
     public Score() {
@@ -25,32 +24,34 @@ public class Score {
         this.score = score;
     }
 
-    public void increseScore(){
-        this.setScore(getScore()+100);
+    public void increseScore() {
+        this.setScore(getScore() + 100);
     }
 
-    public String getScoreText(){
+    public String getScoreText() {
         return "Score " + this.getScore();
     }
+
     static public void createScore(Terminal terminal, Score score) throws IOException {
         String text = score.getScoreText();
-        for(var i = 0; i < text.length(); i++){
-            terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
+        for (var i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(score.scoreColumn + i, score.scoreRow);
             terminal.putCharacter(text.charAt(i));
         }
         terminal.flush();
     }
+
     static public void addScore(Terminal terminal, Score score) throws IOException {
         score.increseScore();
 
         //addScore(terminal, score);
         String text = score.getScoreText();
-        for(var i = 0; i < text.length(); i++){
-            terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
+        for (var i = 0; i < text.length(); i++) {
+            terminal.setCursorPosition(score.scoreColumn + i, score.scoreRow);
             terminal.putCharacter(text.charAt(i));
         }
         terminal.flush();
-
     }
+
 
 }

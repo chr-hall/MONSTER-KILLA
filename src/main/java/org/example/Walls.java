@@ -53,40 +53,40 @@ public class Walls {
         }
         //Vägg ÖVERKANT med öppning i mitt
         for (int i = 10; i < 70; i++) {
-            if (i > 36 && i < 44){
+            if (i > 36 && i < 44) {
                 continue;
             }
             walls.add(new Position(i, 5));
         }
         //Vägg UNDERKANT med öppning i mitt
         for (int i = 10; i < 70; i++) {
-            if (i > 36 && i < 44){
+            if (i > 36 && i < 44) {
                 continue;
             }
             walls.add(new Position(i, 19));
         }
         //Vägg VÄNSTERSIDA med öppning
         for (int i = 5; i < 20; i++) {
-            if (i > 10 && i < 14){
+            if (i > 10 && i < 14) {
                 continue;
             }
             walls.add(new Position(9, i));
         }
         //Vägg VÄNSTERSIDA med öppning
         for (int i = 5; i < 20; i++) {
-            if (i > 10 && i < 14){
+            if (i > 10 && i < 14) {
                 continue;
             }
             walls.add(new Position(70, i));
         }
 
 
-
         DrawWall(terminal, walls);
 
         return walls;
     }
-    private static void DrawWall(Terminal terminal, ArrayList<Position>  walls) throws IOException {
+
+    private static void DrawWall(Terminal terminal, ArrayList<Position> walls) throws IOException {
         for (Position p : walls) {
             terminal.setCursorPosition(p.column, p.row);
             terminal.putCharacter(block);

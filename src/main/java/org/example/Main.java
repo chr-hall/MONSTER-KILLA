@@ -30,28 +30,19 @@ public class Main {
         int oldPositionC = column;
         int oldPositionR = row;
         final char player = FACE_WHITE;
-        char monsterPlayer = '\uDC7D';
-        String boom = "Game over";
-        Character direction = 'd';
-        int count = 0;
+        char direction = 'd';
         Timer timer = new Timer();
-        Score score =new Score();
+        Score score = new Score();
         Score.createScore(terminal, score);
 
-
-        ArrayList<Position> walls = new ArrayList<>();
-
         ArrayList<Position> walls2 = Walls.CreateWalls1(terminal);
-        Position monsterPosition = CreateMonster(terminal);
 
         terminal.setCursorPosition(column, row);
         terminal.putCharacter(player);
         terminal.setCursorVisible(false);
         terminal.flush();
 
-        boolean monster = false;
-
-        timer.schedule(new TimerTask() {
+        timer.schedule(new TimerTask() {        // Add a new monster every 3 sec
             @Override
             public void run() {
                 try {
@@ -62,24 +53,10 @@ public class Main {
             }
         }, 0, 3000);
 
-        Countdown.printTimeLeft(terminal);
-        Countdown.Countdown(terminal, timer, score);
+        Countdown.Countdown(terminal, timer, score);    // Start countdown
 
-        if (monsterPosition.column == column && monsterPosition.row == row) {
-            monster = true;
-        }
 
-        if (monster) {
-            column = oldPositionC;
-            row = oldPositionR;
-        } else {
-            terminal.setCursorPosition(oldPositionC, oldPositionR);
-            terminal.putCharacter(' ');
-            terminal.setCursorPosition(column, row);
-            terminal.putCharacter(player);
-        }
-
-        while (continueReadingInput == true) {
+        while (continueReadingInput) {      // Game loop
 
             KeyStroke keyStroke = null;
             do {
@@ -98,7 +75,6 @@ public class Main {
 
             if (Countdown.timesUp) {
                 continueReadingInput = false;
-
             }
 
             terminal.setCursorPosition(column, row);
@@ -107,22 +83,22 @@ public class Main {
             oldPositionC = column;
 
             switch (c) {
-                case 'w':
+                case 'w' -> {
                     row -= 1;
                     direction = 'w';
-                    break;
-                case 'a':
+                }
+                case 'a' -> {
                     column -= 1;
                     direction = 'a';
-                    break;
-                case 's':
+                }
+                case 's' -> {
                     row += 1;
                     direction = 's';
-                    break;
-                case 'd':
+                }
+                case 'd' -> {
                     column += 1;
                     direction = 'd';
-                    break;
+                }
             }
 
             for (Position p : walls2) {
@@ -131,28 +107,15 @@ public class Main {
                     row = oldPositionR;
                     break;
                 }
-
             }
 
             terminal.setCursorPosition(column, row);
             terminal.putCharacter(player);
             terminal.flush();
 
-            if (column == monsterPosition.column && row == monsterPosition.row) {
-                for (int i = 0; i < boom.length(); i++) {
-                    terminal.setCursorPosition(monsterPosition.column + i, monsterPosition.row);
-                    terminal.putCharacter(boom.charAt(i));
-                    terminal.flush();
-
-                }
-            }
-
-
-            // Shoot method call
-            if (c == Character.valueOf('k')){
+            if (c == Character.valueOf('k')) {   // Call shoot method when k is pressed
                 shoot(terminal, column, row, direction, walls2, score);
             }
-
 
         }
     }
@@ -166,9 +129,6 @@ public class Main {
 
         return monsterPosition;
     }
-
-
-
 
 
 }

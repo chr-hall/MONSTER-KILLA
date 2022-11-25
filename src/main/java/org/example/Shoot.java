@@ -19,7 +19,7 @@ public class Shoot {
 
 
         for (int i = 2; i < t.getColumns(); i++) {
-            switch (direction) {
+            switch (direction) {    // Shoot bullets in player direction
                 case 'w' -> {
                     terminal.setCursorPosition(column, row - i);
                     bulletRow = row - i;
@@ -57,7 +57,9 @@ public class Shoot {
                     terminal.flush();
                 }
             }
+            // Check if monster or wall is hit by bullet
             monsterCheck(bulletRow, bulletCol, walls, terminal, score);
+            // Slow down bullets
             Thread.sleep(3);
         }
 
@@ -65,17 +67,16 @@ public class Shoot {
     }
 
     public static void monsterCheck(int bulletRow, int bulletCol, ArrayList<Position> walls, Terminal terminal, Score score) throws IOException, InterruptedException {
-
         for (Position p : walls) {
             if (bulletCol == p.column && bulletRow == p.row) {
-                addScore(terminal, score);
+                addScore(terminal, score);  // Increase score
                 terminal.setCursorPosition(p.column, p.row);
                 terminal.putCharacter('\u2620');
                 terminal.flush();
-                walls.remove(p);
+                walls.remove(p); // Remove object from array
                 break;
             }
         }
-
     }
+
 }
