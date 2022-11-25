@@ -60,13 +60,10 @@ public class Main {
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 5000);
+        }, 0, 3000);
 
         Countdown.printTimeLeft(terminal);
-        Countdown.Countdown(terminal, timer);
-
-
-
+        Countdown.Countdown(terminal, timer, score);
 
         if (monsterPosition.column == column && monsterPosition.row == row) {
             monster = true;
@@ -97,6 +94,11 @@ public class Main {
                 continueReadingInput = false;
                 System.out.println("quit");
                 terminal.close();
+            }
+
+            if (Countdown.timesUp) {
+                continueReadingInput = false;
+
             }
 
             terminal.setCursorPosition(column, row);

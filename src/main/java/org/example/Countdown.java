@@ -13,7 +13,7 @@ public class Countdown {
 
     static boolean timesUp = false;
 
-    public static void Countdown(Terminal terminal, Timer timer) {
+    public static void Countdown(Terminal terminal, Timer timer, Score score) {
 
         timer.schedule(new TimerTask() {
             @Override
@@ -21,7 +21,7 @@ public class Countdown {
                 addCount();
                 if (timesUp) {
                     try {
-                        gameOver(terminal);
+                        gameOver(terminal, score);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     } catch (InterruptedException e) {
@@ -48,13 +48,12 @@ public class Countdown {
     }
 
     public static void printTime(Terminal terminal, int counter, int counterMin) throws IOException {
-        terminal.setCursorPosition(3, 3);
-        terminal.putCharacter((char)(counter + '0'));
         terminal.setCursorPosition(2, 3);
+        terminal.putCharacter((char)(counter + '0'));
+        terminal.setCursorPosition(1, 3);
         terminal.putCharacter((char)(counterMin + '0'));
         terminal.flush();
     }
-
 
     public static int addCount() {
         counter--;
@@ -67,13 +66,18 @@ public class Countdown {
         return counter;
     }
 
-    public static void gameOver(Terminal terminal) throws IOException, InterruptedException {
+    public static void gameOver(Terminal terminal, Score score) throws IOException, InterruptedException {
         if (Countdown.timesUp == true) {
             String gameover = "GAME OVER!";
+            String sco = "YOUR SCORE WAS: " + score.getScore();
             terminal.clearScreen();
             for (int i = 0; i < gameover.length(); i++) {
                 terminal.setCursorPosition(35 + i, 10);
                 terminal.putCharacter(gameover.charAt(i));
+            }
+            for (int i = 0; i < sco.length(); i++) {
+                terminal.setCursorPosition(30 + i, 12);
+                terminal.putCharacter(sco.charAt(i));
             }
             terminal.flush();
             Thread.sleep(5000);
