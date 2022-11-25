@@ -19,6 +19,15 @@ public class Countdown {
             @Override
             public void run() {
                 addCount();
+                if (timesUp) {
+                    try {
+                        gameOver(terminal);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                     try {
                             printTime(terminal, counter, counterMin);
                     } catch (IOException e) {
@@ -56,6 +65,20 @@ public class Countdown {
             timesUp = true;
         }
         return counter;
+    }
+
+    public static void gameOver(Terminal terminal) throws IOException, InterruptedException {
+        if (Countdown.timesUp == true) {
+            String gameover = "GAME OVER!";
+            terminal.clearScreen();
+            for (int i = 0; i < gameover.length(); i++) {
+                terminal.setCursorPosition(35 + i, 10);
+                terminal.putCharacter(gameover.charAt(i));
+            }
+            terminal.flush();
+            Thread.sleep(5000);
+        }
+
     }
 
 

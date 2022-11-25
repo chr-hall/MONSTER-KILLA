@@ -38,6 +38,7 @@ public class Main {
         Score score =new Score();
         createScore(terminal, score);
 
+
         ArrayList<Position> walls = new ArrayList<>();
 
         ArrayList<Position> walls2 = Walls.CreateWalls1(terminal);
@@ -60,7 +61,7 @@ public class Main {
                 }
             }
         }, 0, 5000);
-        
+
         Countdown.printTimeLeft(terminal);
         Countdown.Countdown(terminal, timer);
 
@@ -148,7 +149,6 @@ public class Main {
             // Shoot method call
             if (c == Character.valueOf('k')){
                 shoot(terminal, column, row, direction, walls2, score);
-
             }
 
 
