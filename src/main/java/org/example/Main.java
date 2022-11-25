@@ -36,7 +36,7 @@ public class Main {
         int count = 0;
         Timer timer = new Timer();
         Score score =new Score();
-        createScore(terminal, score);
+        Score.createScore(terminal, score);
 
         ArrayList<Position> walls = new ArrayList<>();
 
@@ -155,15 +155,6 @@ public class Main {
         }
     }
 
-    static public void createScore(Terminal terminal, Score score) throws IOException {
-        String text = score.getScoreText();
-        for(var i = 0; i < text.length(); i++){
-            terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
-            terminal.putCharacter(text.charAt(i));
-        }
-        terminal.flush();
-    }
-
     public static Position CreateMonster(Terminal terminal) throws IOException {
         Random addMonster = new Random();
         Position monsterPosition = new Position(addMonster.nextInt(80), addMonster.nextInt(24));
@@ -174,18 +165,7 @@ public class Main {
         return monsterPosition;
     }
 
-    static public void addScore(Terminal terminal, Score score) throws IOException {
-        score.increseScore();
 
-        //addScore(terminal, score);
-        String text = score.getScoreText();
-        for(var i = 0; i < text.length(); i++){
-            terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
-            terminal.putCharacter(text.charAt(i));
-        }
-        terminal.flush();
-
-    }
 
 
 
