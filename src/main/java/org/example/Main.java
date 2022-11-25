@@ -45,6 +45,7 @@ public class Main {
 
         terminal.setCursorPosition(column, row);
         terminal.putCharacter(player);
+        terminal.setCursorVisible(false);
         terminal.flush();
 
         boolean monster = false;
@@ -59,6 +60,12 @@ public class Main {
                 }
             }
         }, 0, 5000);
+        
+        Countdown.printTimeLeft(terminal);
+        Countdown.Countdown(terminal, timer);
+
+
+
 
         if (monsterPosition.column == column && monsterPosition.row == row) {
             monster = true;
@@ -126,7 +133,6 @@ public class Main {
 
             terminal.setCursorPosition(column, row);
             terminal.putCharacter(player);
-            terminal.setCursorVisible(false);
             terminal.flush();
 
             if (column == monsterPosition.column && row == monsterPosition.row) {
