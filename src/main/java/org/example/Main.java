@@ -8,6 +8,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,14 +33,16 @@ public class Main {
         final char player = FACE_WHITE;
         char monsterPlayer = '\uDC7D';
         String boom = "Game over";
+
         Character direction = 'd';
         int count = 0;
         Timer timer = new Timer();
 
-        ArrayList<Position> walls = new ArrayList<>();
-
-//        walls = CreateWalls(terminal);
+        ArrayList<Position> walls = CreateWalls(terminal);
         Position monsterPosition = CreateMonster(terminal);
+
+        Score score =new Score();
+        createScore(terminal, score);
 
         terminal.setCursorPosition(column, row);
         terminal.putCharacter(player);
@@ -129,7 +132,12 @@ public class Main {
             terminal.setCursorVisible(false);
             terminal.flush();
 
+
             if (column == monsterPosition.column && row == monsterPosition.row) {
+
+
+
+        }
                 for (int i = 0; i < boom.length(); i++) {
                     terminal.setCursorPosition(monsterPosition.column + i, monsterPosition.row);
                     terminal.putCharacter(boom.charAt(i));
@@ -137,15 +145,6 @@ public class Main {
 
                 }
             }
-
-
-
-//            count++;
-//
-//            if (count > 5) {
-//                walls.add(CreateMonster(terminal));
-//                count = 0;
-//            }
 
             // Shoot method call
             if (c == Character.valueOf('k')){
@@ -202,6 +201,47 @@ public class Main {
         return monsterPosition;
     }
 
+    public static void shoot(Terminal terminal, int x, int y, Character direction) throws IOException, InterruptedException {
+        TerminalSize t = terminal.getTerminalSize();
+
+        for (int i = 2; i < t.getColumns(); i++) {
+            switch (direction) {
+                case 'w' -> {
+                    terminal.setCursorPosition(x, y - i);
+                    terminal.putCharacter(TRIANGLE_UP_POINTING_BLACK);
+                    terminal.flush();
+                    terminal.setCursorPosition(x, y - i + 1);
+                    terminal.putCharacter(' ');
+                    terminal.flush();
+                }
+                case 's' -> {
+                    terminal.setCursorPosition(x, y + i);
+                    terminal.putCharacter(TRIANGLE_DOWN_POINTING_BLACK);
+                    terminal.flush();
+                    terminal.setCursorPosition(x, y + i - 1);
+                    terminal.putCharacter(' ');
+                    terminal.flush();
+                }
+                case 'a' -> {
+                    terminal.setCursorPosition(x - i, y);
+                    terminal.putCharacter(TRIANGLE_LEFT_POINTING_BLACK);
+                    terminal.flush();
+                    terminal.setCursorPosition(x - i + 1, y);
+                    terminal.putCharacter(' ');
+                    terminal.flush();
+                }
+                case 'd' -> {
+                    terminal.setCursorPosition(x + i, y);
+                    terminal.putCharacter(TRIANGLE_RIGHT_POINTING_BLACK);
+                    terminal.flush();
+                    terminal.setCursorPosition(x + i - 1, y);
+                    terminal.putCharacter(' ');
+                    terminal.flush();
+                }
+            }
+            Thread.sleep(3);
+        }
+    }
 
 
 }
