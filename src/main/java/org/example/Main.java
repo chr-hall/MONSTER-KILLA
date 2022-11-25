@@ -9,8 +9,11 @@ import com.googlecode.lanterna.terminal.Terminal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.googlecode.lanterna.Symbols.*;
+import static org.example.Shoot.shoot;
 
 public class Main {
     final static char block = '\u2588';
@@ -29,10 +32,13 @@ public class Main {
         final char player = FACE_WHITE;
         char monsterPlayer = '\uDC7D';
         String boom = "Game over";
-
         Character direction = 'd';
+        int count = 0;
+        Timer timer = new Timer();
 
-        ArrayList<Position> walls = CreateWalls(terminal);
+        ArrayList<Position> walls = new ArrayList<>();
+
+//        walls = CreateWalls(terminal);
         Position monsterPosition = CreateMonster(terminal);
 
         terminal.setCursorPosition(column, row);
@@ -40,6 +46,17 @@ public class Main {
         terminal.flush();
 
         boolean monster = false;
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    walls.add(CreateMonster(terminal));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, 0, 5000);
 
         if (monsterPosition.column == column && monsterPosition.row == row) {
             monster = true;
@@ -121,9 +138,19 @@ public class Main {
                 }
             }
 
+
+
+//            count++;
+//
+//            if (count > 5) {
+//                walls.add(CreateMonster(terminal));
+//                count = 0;
+//            }
+
             // Shoot method call
             if (c == Character.valueOf('k')){
-                shoot(terminal, column, row, direction);
+                shoot(terminal, column, row, direction, walls);
+
             }
 
 
@@ -165,57 +192,16 @@ public class Main {
         }
     }
 
-    private static Position CreateMonster(Terminal terminal) throws IOException {
+    public static Position CreateMonster(Terminal terminal) throws IOException {
         Random addMonster = new Random();
         Position monsterPosition = new Position(addMonster.nextInt(80), addMonster.nextInt(24));
         terminal.setCursorPosition(monsterPosition.column, monsterPosition.row);
-        terminal.putCharacter('\uDC7D');
+        terminal.putCharacter(DOUBLE_LINE_CROSS);
         terminal.flush();
 
         return monsterPosition;
     }
 
-    public static void shoot(Terminal terminal, int x, int y, Character direction) throws IOException, InterruptedException {
-        TerminalSize t = terminal.getTerminalSize();
-
-        for (int i = 2; i < t.getColumns(); i++) {
-            switch (direction) {
-                case 'w' -> {
-                    terminal.setCursorPosition(x, y - i);
-                    terminal.putCharacter(TRIANGLE_UP_POINTING_BLACK);
-                    terminal.flush();
-                    terminal.setCursorPosition(x, y - i + 1);
-                    terminal.putCharacter(' ');
-                    terminal.flush();
-                }
-                case 's' -> {
-                    terminal.setCursorPosition(x, y + i);
-                    terminal.putCharacter(TRIANGLE_DOWN_POINTING_BLACK);
-                    terminal.flush();
-                    terminal.setCursorPosition(x, y + i - 1);
-                    terminal.putCharacter(' ');
-                    terminal.flush();
-                }
-                case 'a' -> {
-                    terminal.setCursorPosition(x - i, y);
-                    terminal.putCharacter(TRIANGLE_LEFT_POINTING_BLACK);
-                    terminal.flush();
-                    terminal.setCursorPosition(x - i + 1, y);
-                    terminal.putCharacter(' ');
-                    terminal.flush();
-                }
-                case 'd' -> {
-                    terminal.setCursorPosition(x + i, y);
-                    terminal.putCharacter(TRIANGLE_RIGHT_POINTING_BLACK);
-                    terminal.flush();
-                    terminal.setCursorPosition(x + i - 1, y);
-                    terminal.putCharacter(' ');
-                    terminal.flush();
-                }
-            }
-            Thread.sleep(3);
-        }
-    }
 
 
 }
