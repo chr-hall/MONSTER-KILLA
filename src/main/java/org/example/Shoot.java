@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import static com.googlecode.lanterna.Symbols.*;
+import static org.example.Main.addScore;
 
 public class Shoot {
-    public static void shoot(Terminal terminal, int column, int row, Character direction, ArrayList<Position> walls) throws IOException, InterruptedException {
+    public static void shoot(Terminal terminal, int column, int row, Character direction, ArrayList<Position> walls, Score score) throws IOException, InterruptedException {
 
         TerminalSize t = terminal.getTerminalSize();
         int bulletRow = row;
@@ -56,14 +57,14 @@ public class Shoot {
                     terminal.flush();
                 }
             }
-            monsterCheck(bulletRow, bulletCol, walls, terminal);
+            monsterCheck(bulletRow, bulletCol, walls, terminal, score);
             Thread.sleep(3);
         }
 
 
     }
 
-    public static void monsterCheck(int bulletRow, int bulletCol, ArrayList<Position> walls, Terminal terminal) throws IOException, InterruptedException {
+    public static void monsterCheck(int bulletRow, int bulletCol, ArrayList<Position> walls, Terminal terminal, Score score) throws IOException, InterruptedException {
         for (Position p : walls) {
             if (bulletCol == p.column && bulletRow == p.row) {
                 terminal.setCursorPosition(p.column, p.row);
@@ -75,6 +76,7 @@ public class Shoot {
 
         for (Position p : walls) {
             if (bulletCol == p.column && bulletRow == p.row) {
+                addScore(terminal, score);
                 terminal.setCursorPosition(p.column, p.row);
                 terminal.putCharacter('\u2620');
                 terminal.flush();

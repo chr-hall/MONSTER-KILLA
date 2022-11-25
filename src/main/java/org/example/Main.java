@@ -35,10 +35,13 @@ public class Main {
         Character direction = 'd';
         int count = 0;
         Timer timer = new Timer();
+        Score score =new Score();
+        createScore(terminal, score);
 
         ArrayList<Position> walls = new ArrayList<>();
 
 //        walls = CreateWalls(terminal);
+        ArrayList<Position> walls2 = Walls.CreateWalls1(terminal);
         Position monsterPosition = CreateMonster(terminal);
 
         terminal.setCursorPosition(column, row);
@@ -51,7 +54,7 @@ public class Main {
             @Override
             public void run() {
                 try {
-                    walls.add(CreateMonster(terminal));
+                    walls2.add(CreateMonster(terminal));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -115,7 +118,7 @@ public class Main {
                     break;
             }
 
-            for (Position p : walls) {
+            for (Position p : walls2) {
                 if (column == p.column && row == p.row) {
                     column = oldPositionC;
                     row = oldPositionR;
@@ -149,7 +152,7 @@ public class Main {
 
             // Shoot method call
             if (c == Character.valueOf('k')){
-                shoot(terminal, column, row, direction, walls);
+                shoot(terminal, column, row, direction, walls2, score);
 
             }
 
@@ -158,32 +161,41 @@ public class Main {
 
     }
 
-    private static ArrayList<Position> CreateWalls(Terminal terminal) throws IOException {
-        ArrayList<Position> walls = new ArrayList<Position>();
-        walls.add(new Position(4, 15));
-        walls.add(new Position(5, 15));
-        walls.add(new Position(6, 15));
-        walls.add(new Position(7, 15));
-        walls.add(new Position(8, 15));
-        walls.add(new Position(9, 15));
-        walls.add(new Position(10, 15));
-        walls.add(new Position(11, 15));
-        walls.add(new Position(12, 15));
-        walls.add(new Position(13, 15));
-        walls.add(new Position(14, 15));
-        walls.add(new Position(15, 15));
-        walls.add(new Position(1, 10));
-        walls.add(new Position(2, 10));
-        walls.add(new Position(3, 10));
-        walls.add(new Position(4, 10));
-        walls.add(new Position(5, 10));
-        walls.add(new Position(6, 10));
-        walls.add(new Position(7, 10));
-
-        DrawWall(terminal, walls);
-
-        return walls;
+    static public void createScore(Terminal terminal, Score score) throws IOException {
+        String text = score.getScoreText();
+        for(var i = 0; i < text.length(); i++){
+            terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
+            terminal.putCharacter(text.charAt(i));
+        }
+        terminal.flush();
     }
+
+//    private static ArrayList<Position> CreateWalls(Terminal terminal) throws IOException {
+//        ArrayList<Position> walls = new ArrayList<Position>();
+//        walls.add(new Position(4, 15));
+//        walls.add(new Position(5, 15));
+//        walls.add(new Position(6, 15));
+//        walls.add(new Position(7, 15));
+//        walls.add(new Position(8, 15));
+//        walls.add(new Position(9, 15));
+//        walls.add(new Position(10, 15));
+//        walls.add(new Position(11, 15));
+//        walls.add(new Position(12, 15));
+//        walls.add(new Position(13, 15));
+//        walls.add(new Position(14, 15));
+//        walls.add(new Position(15, 15));
+//        walls.add(new Position(1, 10));
+//        walls.add(new Position(2, 10));
+//        walls.add(new Position(3, 10));
+//        walls.add(new Position(4, 10));
+//        walls.add(new Position(5, 10));
+//        walls.add(new Position(6, 10));
+//        walls.add(new Position(7, 10));
+//
+//        DrawWall(terminal, walls);
+//
+//        return walls;
+//    }
 
     private static void DrawWall(Terminal terminal, ArrayList<Position> walls) throws IOException {
         for (Position p : walls) {
@@ -200,6 +212,19 @@ public class Main {
         terminal.flush();
 
         return monsterPosition;
+    }
+
+    static public void addScore(Terminal terminal, Score score) throws IOException {
+        score.increseScore();
+
+        //addScore(terminal, score);
+        String text = score.getScoreText();
+        for(var i = 0; i < text.length(); i++){
+            terminal.setCursorPosition(score.scoreColumn+i,score.scoreRow);
+            terminal.putCharacter(text.charAt(i));
+        }
+        terminal.flush();
+
     }
 
 
